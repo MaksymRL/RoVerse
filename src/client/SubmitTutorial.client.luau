@@ -15,13 +15,10 @@ local SharedIpModule = require(ReplicatedStorage.Shared:WaitForChild("SharedPlac
 local buttonSendTutorial = newTutorialFrame:WaitForChild("SubmitTutorial")
 local buttonCancelTutorial = newTutorialFrame:WaitForChild("CancelTutorial")
 
--- Function that gets called when Enter is pressed
 local function onSendButtonClick()
-	-- Get the shared place ID by calling the function from the SharedIpModule
 	local placeid = SharedIpModule.getSharedData()
 
 	if string.len(tutorialText.Text) > 0 and string.len(tutorialText.Text) < 1000 then
-		-- Fire the server event with the comment text and the place ID
 		ServerTrigger:FireServer(tutorialText.Text, placeid, tutorialTitle.Text)
 	end
 end

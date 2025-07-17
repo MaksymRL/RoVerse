@@ -1,13 +1,9 @@
 local DataStoreService = game:GetService("DataStoreService")
 local placeIdStore = DataStoreService:GetDataStore("PlaceIDStore")
 
--- Directly use the list of Place IDs you provided
-local placeIds = {89438510123061, 16732694052, 7041939546, 16865803228}
+local placeIds = { 89438510123061, 16732694052, 7041939546, 16865803228 }
 local dataLoaded = false
 
-
-
--- Save Place IDs
 local function savePlaceIds()
 	local success, errorMessage = pcall(function()
 		placeIdStore:SetAsync("SavedPlaceIds", placeIds)
@@ -19,9 +15,8 @@ local function savePlaceIds()
 	end
 end
 
--- Load Place IDs
 local function loadPlaceIds()
-	print("Loading Place IDs...")  -- Debugging line
+	print("Loading Place IDs...")
 	local success, loadedPlaceIds = pcall(function()
 		return placeIdStore:GetAsync("SavedPlaceIds")
 	end)
@@ -31,52 +26,45 @@ local function loadPlaceIds()
 			placeIds = loadedPlaceIds
 			dataLoaded = true
 		else
-			-- No Place IDs found, we already have the placeIds defined at the start
 			print("No Place IDs found in DataStore. Using defaults.")
-			savePlaceIds()  -- Save the default Place IDs to DataStore
+			savePlaceIds()
 		end
 	else
 		warn("Failed to load Place IDs:", loadedPlaceIds)
-		-- Fallback: Use the hardcoded placeIds
+
 		print("Using default Place IDs (hardcoded).")
-		savePlaceIds()  -- Save the hardcoded Place IDs to DataStore
+		savePlaceIds()
 	end
 
-	-- Debugging: Print the actual contents of placeIds
 	print("Final placeIds table: ", table.concat(placeIds, ", "))
 end
 
--- Add a new Place ID
 local function addPlaceId(newPlaceId)
 	if not table.find(placeIds, newPlaceId) then
 		table.insert(placeIds, newPlaceId)
-		savePlaceIds()  -- Save the updated Place IDs list
+		savePlaceIds()
 		print("Place ID added:", newPlaceId)
 	else
 		print("Place ID already exists:", newPlaceId)
 	end
 end
 
--- Get current Place IDs
 local function getPlaceIds()
-	print("Returning Place IDs:", placeIds)  -- Debugging line
+	print("Returning Place IDs:", placeIds)
 	return placeIds
 end
 local function printPlaceIds()
 	print(placeIds)
-end	
--- Initialize placeIds when the script is required
+end
+
 loadPlaceIds()
 local function isDataLoaded()
 	return dataLoaded
 end
 
--- Return functions for external access
 return {
 	AddPlaceId = addPlaceId,
 	GetPlaceIds = getPlaceIds,
 	IsDataLoaded = isDataLoaded,
-	PrintPlaceIds = printPlaceIds
+	PrintPlaceIds = printPlaceIds,
 }
-
-

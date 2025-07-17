@@ -1,4 +1,3 @@
--- Create a ComboBox GUI
 local player = game.Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 local launcherGui = PlayerGui:WaitForChild("LauncherGUI")
@@ -30,9 +29,9 @@ local filterRequest = ReplicatedStorage:WaitForChild("FilterRequest")
 local LoadingFrame = guisPlace:WaitForChild("Loading")
 local gameScrollingFrame = guisPlace:WaitForChild("GamesScrollingFrame")
 local count = require(ReplicatedStorage.Shared:WaitForChild("SharedPlaceId"))
-dropdownMenu.Visible = false -- Hidden by default
+dropdownMenu.Visible = false
 filterSpecs.Visible = false
--- Populate Dropdown Menu
+
 local options = {
 	"All",
 	"Action",
@@ -64,10 +63,10 @@ for i, option in ipairs(options) do
 	optionButton.FontFace = fontFace
 	optionButton.TextSize = 10
 	optionButton.TextScaled = true
-	-- Click Event for Each Option
+
 	optionButton.MouseButton1Click:Connect(function()
-		genreButton.Text = option -- Update main button text
-		dropdownMenu.Visible = false -- Hide dropdown
+		genreButton.Text = option
+		dropdownMenu.Visible = false
 	end)
 end
 
@@ -125,7 +124,6 @@ local function onRandomClick()
 	local randGenre = math.random(1, #options)
 	genreButton.Text = options[randGenre]
 
-	-- Constants for oldest and current year
 	local oldest = 2006
 	local youngest = tonumber(os.date("%Y"))
 	local fromCreate = math.random(oldest, youngest)
@@ -134,7 +132,6 @@ local function onRandomClick()
 	fromCreation.Text = tostring(fromCreate)
 	toCreation.Text = tostring(toCreate)
 
-	-- Generate Random Update Years
 	local fromUpdated
 	if toCreate == "" then
 		fromUpdated = youngest
@@ -157,7 +154,7 @@ local function onRandomClick()
 
 	fromUpdate.Text = tostring(fromUpdated)
 	toUpdate.Text = tostring(toUpdated)
-	-- Generate Random Ratings
+
 	local randomRating = math.random(1, 5)
 	fromRating.Text = tostring(randomRating)
 
@@ -314,7 +311,7 @@ applyButton.MouseButton1Click:Connect(onApplyClick)
 resetButton.MouseButton1Click:Connect(onResetClick)
 
 randomButton.MouseButton1Click:Connect(onRandomClick)
--- Toggle Dropdown Visibility
+
 genreButton.MouseButton1Click:Connect(function()
 	dropdownMenu.Visible = not dropdownMenu.Visible
 end)

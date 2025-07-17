@@ -45,7 +45,7 @@ end
 local function searchDataToSend(player, indexToAdd, array)
 	if indexToAdd == 1 then
 		for i, placeId in ipairs(array) do
-			wait(0.01) -- Small delay to avoid overwhelming the client
+			wait(0.01)
 
 			if i ~= #arrayPlaceIdsSortedBy then
 				local gamesData = GameDataManager.GetGameData(placeId)
@@ -54,34 +54,31 @@ local function searchDataToSend(player, indexToAdd, array)
 				end
 			end
 
-			-- Stop when it reaches the last item
 			if i == 20 or i == #array then
 				LoadingStopRequest:FireClient(player)
 				amountPages = math.ceil(#array / 20)
 				amountGames = #array
 
 				ChangePageRequest:FireClient(player, amountPages)
-				break -- Break the loop when the last item is reached
+				break
 			end
 		end
 	else
-		local startIndex = (indexToAdd - 1) * 20 + 1 -- Calculate the starting index for this page
+		local startIndex = (indexToAdd - 1) * 20 + 1
 
 		for i = startIndex, #array do
-			wait(0.01) -- Small delay to avoid overwhelming the client
+			wait(0.01)
 
 			local placeId = array[i]
 			local gamesData = GameDataManager.GetGameData(placeId)
 
-			-- Only send the game data for this page
 			if i <= indexToAdd * 20 and i >= startIndex then
 				sendGameDataToClient(player, gamesData[1], placeId)
 			end
 
-			-- Stop when it reaches the last item
 			if i == indexToAdd * 20 or i == #array then
 				LoadingStopRequest:FireClient(player)
-				break -- Break the loop when the last item is reached
+				break
 			end
 		end
 	end
@@ -156,95 +153,3 @@ searchRequest.OnServerEvent:Connect(function(player, searchText)
 	print(arrayPlaceIdsSearched)
 	searchDataToSend(player, 1, arrayPlaceIdsSearched)
 end)
-
--- details
-
---local serverUrlDetails = "https://able-infrequent-honey.glitch.me/get_game_details"
-
---local function fetchGameStats(placeId)
---	local url = serverUrlDetails .. "?place_id=" .. placeId
---	local success, response = pcall(function()
---		return HttpService:GetAsync(url)
---	end)
-
---	if success then
---		local gameData = HttpService:JSONDecode(response)
---		if gameData and not gameData.error then
---			return gameData
---		end
---	end
-
---	warn("Failed to fetch stats for Place ID:", placeId)
---	return nil
---end
-
---local function fetchGameInfo(placeId)
---	local success, productInfo = pcall(function()
---		return MarketplaceService:GetProductInfo(placeId)
---	end)
-
---	if success then
---		return {
---			name = productInfo.Name or "Unknown Game",
---			description = productInfo.Description or "No description available",
---			thumbnailUrl = "rbxthumb://type=Asset&id=" .. placeId .. "&w=768&h=432",
---			print("skibidi sigma"),
---			creator = productInfo.Creator.Name
---		}
---	end
-
---	warn("Failed to fetch game info for Place ID:", placeId)
---	return nil
---end
-
---ListDataEvent.OnServerEvent:Connect(function(player, placeId)
---	local GameDataManager = require(game.ServerScriptService:WaitForChild("GameDataManager"))
---	local placeIdsManager = require(game.ServerScriptService:WaitForChild("PlaceIdManager"))
-
---	local arrayPlaceIds =  placeIdsManager.GetPlaceIds()
---	print(arrayPlaceIds)
-
---	for i, placeId in ipairs(arrayPlaceIds) do
---		task.wait(0.5)  -- Small delay to avoid overwhelming the client
---		GameDataManager.ClearGameData(placeId)
-
---		-- Stop when it reaches the last item
---		if i == #arrayPlaceIds then
-
---			--ChangePageRequest:FireClient(player,amountPages)
---			break  -- Break the loop when the last item is reached
---		end
---	end
-
---	for i, placeId in ipairs(arrayPlaceIds) do
---		task.wait(0.5)  -- Small delay to avoid overwhelming the client
---		local gameStats = fetchGameStats(placeId)
---		local gameInfo = fetchGameInfo(placeId)
---		local gameName, gameDescription, gameCreatorAct = getGameInfo(placeId)
---		if gameStats and gameInfo then
---			GameDataManager.SaveGameData(placeId,gameInfo.name,
---				gameCreatorAct,
---				gameInfo.description,
---				gameInfo.thumbnailUrl,
---				gameStats.activePlayers,
---				gameStats.camera,
---				gameStats.created,
---				gameStats.favorites,
---				gameStats.genre,
---				gameStats.serverSize,
---				gameStats.updated,
---				gameStats.visits,
---				gameStats.voiceChat)
---		end
---GameDataManager.PrintGameData(placeId)
---		-- Stop when it reaches the last item
---		if i == #arrayPlaceIds then
---			print("Reached last item:", placeId)
---			LoadingStopRequest:FireClient(player)
---			amountPages = math.ceil(#arrayPlaceIds / 20)
---			print("the amount of pages is" .. amountPages .. " and type is " .. typeof(amountPages))
---			--ChangePageRequest:FireClient(player,amountPages)
---			break  -- Break the loop when the last item is reached
---		end
---	end
---end)

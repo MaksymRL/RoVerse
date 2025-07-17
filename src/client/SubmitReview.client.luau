@@ -21,9 +21,7 @@ local reviewStarThree = reviewRating:WaitForChild("RatingFrame"):WaitForChild("S
 local reviewStarFour = reviewRating:WaitForChild("RatingFrame"):WaitForChild("StarFour")
 local reviewStarFive = reviewRating:WaitForChild("RatingFrame"):WaitForChild("StarFive")
 
--- Function that gets called when Enter is pressed
 local function onSendButtonClick()
-	-- Get the shared place ID by calling the function from the SharedIpModule
 	local placeid = SharedIpModule.getSharedData()
 	local rating
 	if reviewStarFive.Image == "rbxassetid://95720319646844" then
@@ -37,12 +35,11 @@ local function onSendButtonClick()
 	elseif reviewStarOne.Image == "rbxassetid://95720319646844" then
 		rating = 1
 	else
-		rating = 1 --for rn as default 1
+		rating = 1
 		print("Missing Rating!")
 	end
 
 	if string.len(reviewText.Text) > 0 and string.len(reviewText.Text) < 1000 then
-		-- Fire the server event with the comment text and the place ID
 		ServerTrigger:FireServer(reviewText.Text, placeid, reviewTitle.Text, rating)
 	end
 end

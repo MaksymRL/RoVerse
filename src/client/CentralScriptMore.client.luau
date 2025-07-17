@@ -7,11 +7,9 @@ local GameScrollingFrame = Guis:WaitForChild("GamesScrollingFrame")
 local DetailsDataEvent = ReplicatedStorage:WaitForChild("DetailsDataEvent")
 local CommentsDataEvent = ReplicatedStorage:WaitForChild("CommentsDataEvent")
 
-
 local DescriptionFrame = GameScrollingFrame:WaitForChild("AboutSection"):WaitForChild("Description")
 local GameStats = GameScrollingFrame:WaitForChild("AboutSection"):WaitForChild("GameStats")
 local ThumbnailFrame = GameScrollingFrame:WaitForChild("ThumbnailFrame")
-
 
 local GameName = ThumbnailFrame:WaitForChild("GameName")
 local Description = DescriptionFrame:WaitForChild("DescriptionValueContainer"):WaitForChild("DescriptionValue")
@@ -39,8 +37,6 @@ local TutorialsDataEvent = ReplicatedStorage:WaitForChild("TutorialDataEvent")
 local TutorialsSection = GameScrollingFrame:WaitForChild("TutorialsSection")
 local TutorialsFolder = TutorialsSection:WaitForChild("TutorialsScrollingFrame")
 local TutorialTemplate = TutorialsFolder:WaitForChild("TutorialFrame")
- 
-
 
 local function formatDate(dateString)
 	return string.sub(dateString, 6, 7) .. "/" .. string.sub(dateString, 9, 10) .. "/" .. string.sub(dateString, 1, 4)
@@ -49,7 +45,6 @@ end
 local commentsArray = {}
 
 local function updateGameDetails(data)
-	-- Update the UI with the received data
 	GameName.Text = data.gameName or "Unknown"
 	Description.Text = data.gameDescription or "No description available."
 	Thumbnail.Image = data.thumbnailUrl
@@ -67,86 +62,97 @@ local function updateGameDetails(data)
 	print(UpdatedDate.Text)
 end
 
-
-	CommentsDataEvent.OnClientEvent:Connect(function(text, nickname, timediff,actualtimestamp)
-	
-		
-		local gameEntryClone = CommentTemplate:Clone()
-	gameEntryClone.Parent = CommentsScrollingFrame
-		gameEntryClone.Visible = true
-	    gameEntryClone.Name = "Comment_" .. nickname:gsub("_", "")  .. "_" .. string.sub(text,1,20):gsub("_", "")  .."_" .. actualtimestamp
-		gameEntryClone.LayoutOrder = gameEntryClone.LayoutOrder + Count
-		local commentText = gameEntryClone:WaitForChild("CommentText")
-		local Nickname = gameEntryClone:WaitForChild("Nickname")
-		local TimeAgo = gameEntryClone:WaitForChild("TimeAgo")
-
-		commentText.Text = text
-		Nickname.Text = nickname
-		TimeAgo.Text = timediff
-		Count += 1
-
-		print("Count: " .. Count)
-		
-	end)
-
-
-	DetailsDataEvent.OnClientEvent:Connect(updateGameDetails)
-	
-	
-	
-ReplyCommentsDataEvent.OnClientEvent:Connect(function(text, nickname, timediff, actualtimestamp, commentToReply, replyTo)
+CommentsDataEvent.OnClientEvent:Connect(function(text, nickname, timediff, actualtimestamp)
 	local gameEntryClone = CommentTemplate:Clone()
 	gameEntryClone.Parent = CommentsScrollingFrame
 	gameEntryClone.Visible = true
-	gameEntryClone.Name = "Comment_" .. nickname:gsub("_", "")  .. "_" .. string.sub(text, 1, 20):gsub("_", "")  .."_" .. actualtimestamp
-    
-	-- Find the comment to reply to by its name
-	local childToReplyTo = CommentsScrollingFrame:FindFirstChild(commentToReply)
-	if childToReplyTo then
-		gameEntryClone.LayoutOrder = childToReplyTo.LayoutOrder
-	else
-		gameEntryClone.LayoutOrder = #CommentsScrollingFrame:GetChildren() + 1 -- fallback if not found
-	end
-	
-	
-	gameEntryClone.BackgroundTransparency = 0
+	gameEntryClone.Name = "Comment_"
+		.. nickname:gsub("_", "")
+		.. "_"
+		.. string.sub(text, 1, 20):gsub("_", "")
+		.. "_"
+		.. actualtimestamp
+	gameEntryClone.LayoutOrder = gameEntryClone.LayoutOrder + Count
 	local commentText = gameEntryClone:WaitForChild("CommentText")
 	local Nickname = gameEntryClone:WaitForChild("Nickname")
 	local TimeAgo = gameEntryClone:WaitForChild("TimeAgo")
 
-	commentText.Text = "@" .. replyTo .. " " .. text
+	commentText.Text = text
 	Nickname.Text = nickname
 	TimeAgo.Text = timediff
+	Count += 1
+
+	print("Count: " .. Count)
 end)
 
+DetailsDataEvent.OnClientEvent:Connect(updateGameDetails)
 
-ReviewsDataEvent.OnClientEvent:Connect(function( reviewText, nickname, timediff,actualtimestamp, reviewTitle, reviewRating)
-	local reviewClone = ReviewTemplate:Clone()
-	reviewClone.Visible = true
-	reviewClone.Parent = ReviewFolder
-	reviewClone.Name = "Review_" .. nickname:gsub("_", "")  .. "_" .. string.sub(reviewText, 1, 20):gsub("_", "")  .."_" .. actualtimestamp
-	reviewClone.LayoutOrder = reviewClone.LayoutOrder + Count
-	
-	local UserNickname = reviewClone:WaitForChild("Nickname")
-	UserNickname.Text = nickname
-	local Title = reviewClone:WaitForChild("Title")
-	Title.Text = reviewTitle
-	local ReviewText = reviewClone:WaitForChild("ReviewText")
-	ReviewText.Text = reviewText
-	local TimeAgo = reviewClone:WaitForChild("TimeAgo")
-	TimeAgo.Text = timediff
-	local Rating = reviewClone:WaitForChild("RatingAmount")
-	Rating.Text = reviewRating*2 .. "/10" .. "Final Rating"
-end)
+ReplyCommentsDataEvent.OnClientEvent:Connect(
+	function(text, nickname, timediff, actualtimestamp, commentToReply, replyTo)
+		local gameEntryClone = CommentTemplate:Clone()
+		gameEntryClone.Parent = CommentsScrollingFrame
+		gameEntryClone.Visible = true
+		gameEntryClone.Name = "Comment_"
+			.. nickname:gsub("_", "")
+			.. "_"
+			.. string.sub(text, 1, 20):gsub("_", "")
+			.. "_"
+			.. actualtimestamp
 
+		local childToReplyTo = CommentsScrollingFrame:FindFirstChild(commentToReply)
+		if childToReplyTo then
+			gameEntryClone.LayoutOrder = childToReplyTo.LayoutOrder
+		else
+			gameEntryClone.LayoutOrder = #CommentsScrollingFrame:GetChildren() + 1
+		end
 
+		gameEntryClone.BackgroundTransparency = 0
+		local commentText = gameEntryClone:WaitForChild("CommentText")
+		local Nickname = gameEntryClone:WaitForChild("Nickname")
+		local TimeAgo = gameEntryClone:WaitForChild("TimeAgo")
 
+		commentText.Text = "@" .. replyTo .. " " .. text
+		Nickname.Text = nickname
+		TimeAgo.Text = timediff
+	end
+)
 
-TutorialsDataEvent.OnClientEvent:Connect(function( tutorialText, nickname, timediff,actualtimestamp, tutorialTitle)
+ReviewsDataEvent.OnClientEvent:Connect(
+	function(reviewText, nickname, timediff, actualtimestamp, reviewTitle, reviewRating)
+		local reviewClone = ReviewTemplate:Clone()
+		reviewClone.Visible = true
+		reviewClone.Parent = ReviewFolder
+		reviewClone.Name = "Review_"
+			.. nickname:gsub("_", "")
+			.. "_"
+			.. string.sub(reviewText, 1, 20):gsub("_", "")
+			.. "_"
+			.. actualtimestamp
+		reviewClone.LayoutOrder = reviewClone.LayoutOrder + Count
+
+		local UserNickname = reviewClone:WaitForChild("Nickname")
+		UserNickname.Text = nickname
+		local Title = reviewClone:WaitForChild("Title")
+		Title.Text = reviewTitle
+		local ReviewText = reviewClone:WaitForChild("ReviewText")
+		ReviewText.Text = reviewText
+		local TimeAgo = reviewClone:WaitForChild("TimeAgo")
+		TimeAgo.Text = timediff
+		local Rating = reviewClone:WaitForChild("RatingAmount")
+		Rating.Text = reviewRating * 2 .. "/10" .. "Final Rating"
+	end
+)
+
+TutorialsDataEvent.OnClientEvent:Connect(function(tutorialText, nickname, timediff, actualtimestamp, tutorialTitle)
 	local tutorialClone = TutorialTemplate:Clone()
 	tutorialClone.Visible = true
 	tutorialClone.Parent = TutorialsFolder
-	tutorialClone.Name = "Tutorial_" .. nickname:gsub("_", "")  .. "_" .. string.sub(tutorialText, 1, 20):gsub("_", "")  .."_" .. actualtimestamp
+	tutorialClone.Name = "Tutorial_"
+		.. nickname:gsub("_", "")
+		.. "_"
+		.. string.sub(tutorialText, 1, 20):gsub("_", "")
+		.. "_"
+		.. actualtimestamp
 	tutorialClone.LayoutOrder = tutorialClone.LayoutOrder + Count
 
 	local UserNickname = tutorialClone:WaitForChild("Nickname")
@@ -158,12 +164,3 @@ TutorialsDataEvent.OnClientEvent:Connect(function( tutorialText, nickname, timed
 	local TimeAgo = tutorialClone:WaitForChild("TimeAgo")
 	TimeAgo.Text = timediff
 end)
-
-
-
-
-
-
-
-
-

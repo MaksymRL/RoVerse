@@ -1,4 +1,3 @@
--- Place this script in the TextBox or Button (depending on your design)
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local launcherGui = playerGui:WaitForChild("LauncherGUI")
@@ -19,7 +18,7 @@ local function checkPlaceExists(placeId)
 	end)
 
 	if success then
-		if productInfo.AssetTypeId == 9 then -- 9 is the AssetTypeId for Places
+		if productInfo.AssetTypeId == 9 then
 			print("Place exists:", productInfo.Name, "- Place ID:", placeId)
 			ServerTriggerEvent:FireServer(placeId)
 		else
@@ -30,16 +29,8 @@ local function checkPlaceExists(placeId)
 	end
 end
 
--- Trigger the search when Enter is pressed
 SearchBar.FocusLost:Connect(function(enterPressed)
 	if enterPressed then
-		--local input = tonumber(SearchBar.Text) -- Ensure input is a number
-		--if input then
-		--	checkPlaceExists(input)
-		--else
-		--	print("Please enter a valid Place ID.")
-		--end
-
 		local allChildsOfGames = gameScrollingFrame:WaitForChild("Games"):GetChildren()
 		for i, child in ipairs(allChildsOfGames) do
 			if

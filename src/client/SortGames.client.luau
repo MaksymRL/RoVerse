@@ -1,4 +1,3 @@
--- Create a ComboBox GUI
 local player = game.Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 local launcherGui = PlayerGui:WaitForChild("LauncherGUI")
@@ -9,7 +8,7 @@ local mainButton = sortFrame:WaitForChild("SortTextButton")
 local dropdownMenu = sortFrame:WaitForChild("ScrollingFrame")
 local fontFace =
 	Font.new("rbxasset://fonts/families/HighwayGothic.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-dropdownMenu.Visible = false -- Hidden by default
+dropdownMenu.Visible = false
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ListDataEvent = ReplicatedStorage:WaitForChild("ListDataEvent")
 local count = require(ReplicatedStorage.Shared:WaitForChild("SharedPlaceId"))
@@ -51,7 +50,7 @@ local function SortGamesBasedOn(ByWhat)
 		ListDataEvent:FireServer(1, "Rating")
 	end
 end
--- Populate Dropdown Menu
+
 local options = { "Featured", "Last Update", "Visits", "Bookmarks", "Active Players", "Name", "Rating" }
 for i, option in ipairs(options) do
 	local optionButton = Instance.new("TextButton")
@@ -64,18 +63,16 @@ for i, option in ipairs(options) do
 	optionButton.FontFace = fontFace
 	optionButton.TextSize = 10
 	optionButton.TextScaled = true
-	-- Click Event for Each Option
+
 	optionButton.MouseButton1Click:Connect(function()
-		mainButton.Text = "Sort: " .. option -- Update main button text
-		dropdownMenu.Visible = false -- Hide dropdown
+		mainButton.Text = "Sort: " .. option
+		dropdownMenu.Visible = false
 		SortGamesBasedOn(option)
 	end)
 end
 
--- Update CanvasSize to fit options
 dropdownMenu.CanvasSize = UDim2.new(0, 0, 0, #options * 30)
 
--- Toggle Dropdown Visibility
 mainButton.MouseButton1Click:Connect(function()
 	dropdownMenu.Visible = not dropdownMenu.Visible
 end)

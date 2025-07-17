@@ -53,7 +53,6 @@ local function fetchGameInfo(placeId, retries)
 	return fetchGameInfo(placeId, retries + 1)
 end
 
--- Function to handle the event and perform an action
 ServerTriggerEvent.OnServerEvent:Connect(function(player, placeId)
 	if typeof(placeId) ~= "number" or placeId <= 0 then
 		warn(player.Name .. " provided an invalid Place ID:", tostring(placeId))

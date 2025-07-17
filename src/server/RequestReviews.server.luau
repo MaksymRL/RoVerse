@@ -2,7 +2,7 @@ local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local ReviewsDataEvent = ReplicatedStorage:WaitForChild("ReviewDataEvent")
--- Function to send game data to client
+
 local function sendGameDataToClient(player, review)
 	local text = review.text
 	local nickname = review.nickname
@@ -10,7 +10,7 @@ local function sendGameDataToClient(player, review)
 	local timeDifference = os.difftime(currentTime, review.timestamp)
 	local title = review.title
 	local rating = review.rating
-	-- Convert the time difference into a readable format (seconds, minutes, hours, days)
+
 	local timeString
 	if timeDifference < 60 then
 		timeString = string.format("%d seconds ago", timeDifference)
@@ -22,7 +22,6 @@ local function sendGameDataToClient(player, review)
 		timeString = string.format("%d days ago", math.floor(timeDifference / 86400))
 	end
 
-	-- Check if the player is still in the game
 	if player and player.Parent then
 		print("Review sent to client with")
 		ReviewsDataEvent:FireClient(player, text, nickname, timeString, review.timestamp, title, rating)
@@ -36,14 +35,13 @@ ReviewsDataEvent.OnServerEvent:Connect(function(player, placeId)
 	local arrayReviews = reviewsManager.GetReviews(placeId, player.DisplayName)
 	print("Reviews count: " .. #arrayReviews)
 
-	-- Send each comment to the client
 	for i, review in ipairs(arrayReviews) do
-		task.wait(0.5) -- Avoid overwhelming the client
+		task.wait(0.5)
 		if not player or not player.Parent then
 			print("Player left during data transmission")
 			break
 		end
-		-- Send comment data to the client
+
 		sendGameDataToClient(player, review)
 	end
 end)

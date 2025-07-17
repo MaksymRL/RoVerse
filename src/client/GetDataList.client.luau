@@ -12,7 +12,6 @@ if not launcherGui then
 end
 local count = require(ReplicatedStorage.Shared:WaitForChild("SharedPlaceId"))
 
--- Reference the UI elements
 local launcherGuisFrame = launcherGui:WaitForChild("GuisPlace")
 local launcherGameScrollingFrame = launcherGuisFrame:WaitForChild("GamesScrollingFrame")
 local launcherGamesFolder = launcherGameScrollingFrame:WaitForChild("Games")
@@ -31,14 +30,12 @@ ListDataEvent.OnClientEvent:Connect(
 		gameBookmarks,
 		gameRating
 	)
-		-- Clone the template for the scrolling frame
-
 		local gameEntryClone = launcherGameEntryTemplateFrame:Clone()
-		gameEntryClone.Name = gameName .. "_" .. placeId .. "_Entry" -- Unique name for each clone
-		gameEntryClone.Parent = launcherGamesFolder -- Set the parent to the scrolling frame
-		gameEntryClone.Visible = true -- Ensure the cloned entry is visible
+		gameEntryClone.Name = gameName .. "_" .. placeId .. "_Entry"
+		gameEntryClone.Parent = launcherGamesFolder
+		gameEntryClone.Visible = true
 		gameEntryClone.LayoutOrder = count.getSharedCount()
-		-- Update the cloned template
+
 		local cloneNameLabel = gameEntryClone:WaitForChild("NameAndCreator")
 		local cloneThumbnailImage = gameEntryClone:WaitForChild("Thumbnail")
 		local cloneDescriptionLabel = gameEntryClone:WaitForChild("Description")
@@ -47,10 +44,8 @@ ListDataEvent.OnClientEvent:Connect(
 
 		if firstNewLineIndex then
 			if firstNewLineIndex > 80 then
-				-- Show only the first 40 characters of the description
 				cloneDescriptionLabel.Text = string.sub(gameDescription, 1, 80) .. "..."
 			else
-				-- Show everything up to the newline
 				cloneDescriptionLabel.Text = string.sub(gameDescription, 1, firstNewLineIndex - 1) .. "..."
 			end
 		else
@@ -69,7 +64,7 @@ ListDataEvent.OnClientEvent:Connect(
 			.. " | Genre : "
 			.. gameGenre
 		cloneNameLabel.Text = gameName .. " | By " .. gameCreator
-		cloneThumbnailImage.Image = thumbnailUrl or "rbxassetid://12345678" -- Default image if thumbnailUrl is missing
+		cloneThumbnailImage.Image = thumbnailUrl or "rbxassetid://12345678"
 
 		local intermediate = count.getSharedCount() + 1
 		count.setSharedCount(intermediate)
