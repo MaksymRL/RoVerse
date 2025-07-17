@@ -1,18 +1,17 @@
-
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local launcherGui = playerGui:WaitForChild("LauncherGUI")
-local guisPlaceDetails = launcherGui:WaitForChild("GuisPlaceDetails")
-local gameScrollingFrame = guisPlaceDetails:WaitForChild("GamesScrollingFrame")
-local aboutSection = gameScrollingFrame:WaitForChild("AboutSection")
-local gameSections = gameScrollingFrame:WaitForChild("GameSections")
+local guisPlaceDetails = launcherGui.GuisPlaceDetails
+local gameScrollingFrame = guisPlaceDetails.GamesScrollingFrame
+local aboutSection = gameScrollingFrame.AboutSection
+local gameSections = gameScrollingFrame.GameSections
 local children = gameSections:GetChildren()
-local buttonReviews = gameSections:WaitForChild("Reviews"):WaitForChild("Reviews")
+local buttonReviews = gameSections.Reviews.Reviews
 
-local chatsSection =  gameScrollingFrame:WaitForChild("ChatsSection")
-local commentsSection =  gameScrollingFrame:WaitForChild("CommentsSection")
-local reviewsSection =  gameScrollingFrame:WaitForChild("ReviewsSection")
-local tutorialsSection =  gameScrollingFrame:WaitForChild("TutorialsSection")
+local chatsSection = gameScrollingFrame.ChatsSection
+local commentsSection = gameScrollingFrame.CommentsSection
+local reviewsSection = gameScrollingFrame.ReviewsSection
+local tutorialsSection = gameScrollingFrame.TutorialsSection
 local function onButtonClick()
 	for _, child in ipairs(children) do
 		local nestedChildren = child:GetChildren()
@@ -22,7 +21,7 @@ local function onButtonClick()
 				-- Extract the text between <u> and </u> using string.match
 				local extractedText = string.match(nestedChild.Text, "<u>(.-)</u>")
 				if extractedText then
-					nestedChild.Text = extractedText  -- Update the TextButton's text
+					nestedChild.Text = extractedText -- Update the TextButton's text
 				end
 			end
 
@@ -35,10 +34,10 @@ local function onButtonClick()
 
 	-- Add <u> around the button's text to underline it
 	buttonReviews.Text = "<u>" .. buttonReviews.Text .. "</u>"
-	buttonReviews.RichText = true  -- Enable RichText so the <u> tag works
+	buttonReviews.RichText = true -- Enable RichText so the <u> tag works
 
 	-- Get the UIStroke of the button's parent and set its thickness
-	local buttonUIStroke = buttonReviews.Parent:WaitForChild("UIStroke")
+	local buttonUIStroke = buttonReviews.Parent.UIStroke
 	if buttonUIStroke then
 		buttonUIStroke.Thickness = 4
 	end

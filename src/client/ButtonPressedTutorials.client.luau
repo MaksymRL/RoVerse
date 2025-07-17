@@ -1,17 +1,17 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local launcherGui = playerGui:WaitForChild("LauncherGUI")
-local guisPlaceDetails = launcherGui:WaitForChild("GuisPlaceDetails")
-local gameScrollingFrame = guisPlaceDetails:WaitForChild("GamesScrollingFrame")
-local aboutSection = gameScrollingFrame:WaitForChild("AboutSection")
-local gameSections = gameScrollingFrame:WaitForChild("GameSections")
+local guisPlaceDetails = launcherGui.GuisPlaceDetails
+local gameScrollingFrame = guisPlaceDetails.GamesScrollingFrame
+local aboutSection = gameScrollingFrame.AboutSection
+local gameSections = gameScrollingFrame.GameSections
 local children = gameSections:GetChildren()
-local buttonTutorials = gameSections:WaitForChild("Tutorials"):WaitForChild("Tutorials")
+local buttonTutorials = gameSections.Tutorials.Tutorials
 
-local chatsSection = gameScrollingFrame:WaitForChild("ChatsSection")
-local commentsSection = gameScrollingFrame:WaitForChild("CommentsSection")
-local reviewsSection = gameScrollingFrame:WaitForChild("ReviewsSection")
-local tutorialsSection = gameScrollingFrame:WaitForChild("TutorialsSection")
+local chatsSection = gameScrollingFrame.ChatsSection
+local commentsSection = gameScrollingFrame.CommentsSection
+local reviewsSection = gameScrollingFrame.ReviewsSection
+local tutorialsSection = gameScrollingFrame.TutorialsSection
 local function onButtonClick()
 	for _, child in ipairs(children) do
 		local nestedChildren = child:GetChildren()
@@ -37,7 +37,7 @@ local function onButtonClick()
 	buttonTutorials.RichText = true -- Enable RichText so the <u> tag works
 
 	-- Get the UIStroke of the button's parent and set its thickness
-	local buttonUIStroke = buttonTutorials.Parent:WaitForChild("UIStroke")
+	local buttonUIStroke = buttonTutorials.Parent.UIStroke
 	if buttonUIStroke then
 		buttonUIStroke.Thickness = 4
 	end
